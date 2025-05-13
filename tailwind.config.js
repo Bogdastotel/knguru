@@ -15,6 +15,14 @@ module.exports = {
       secondary: "#22d3ee", // Example cyan
       accent: "#f59e0b", // Example amber
     },
+    extend: {
+      fontFamily: {
+        lexend: ["Lexend_400Regular"],
+        "lexend-medium": ["Lexend_500Medium"],
+        "lexend-semibold": ["Lexend_600SemiBold"],
+        "lexend-bold": ["Lexend_700Bold"],
+      },
+    },
   },
   plugins: [],
 };

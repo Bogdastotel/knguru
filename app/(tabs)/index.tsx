@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { CustomText } from "@/components/ui/CustomText";
+import { View } from "react-native";
 
 export default function HomeScreen() {
   return (
     <View className="flex-1 items-center justify-center bg-background">
-      <Text className="text-lg font-bold">Hello</Text>
+      <CustomText className="text-lg font-lexend-medium">Hello</CustomText>
     </View>
   );
 }

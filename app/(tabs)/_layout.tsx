@@ -33,7 +33,6 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            // <IconSymbol size={28} name="house.fill" color={color} />
             <HomeIcon width={24} height={24} color={color} fill={color} />
           ),
         }}
@@ -43,7 +42,6 @@ export default function TabLayout() {
         options={{
           title: "Favorites",
           tabBarIcon: ({ color }) => (
-            // <IconSymbol size={28} name="house.fill" color={color} />
             <FavoritesIcon width={24} height={24} color={color} fill={color} />
           ),
         }}

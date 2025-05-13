@@ -33,10 +33,18 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "206edafc-bb7e-4ba8-b362-72b1fe71f5ac"
+      }
+    },
+    "owner": "bogdastotel"
   }
 }

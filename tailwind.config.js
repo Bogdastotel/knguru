@@ -18,9 +18,11 @@ module.exports = {
     extend: {
       colors: {
         background: "#DEE6ED",
+        error: "#F0125C",
         "background-yellow": "#FFD500",
         "background-price": "#F4F6F8",
         white: "#FFFFFF",
+        "double-cell": "#CBD4DC",
         "main-blue": "#0E263ECC",
         card: "#FFFFFF",
         "stroke-primary": "#EBEEF1",

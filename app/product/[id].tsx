@@ -295,7 +295,10 @@ export default function ProductDetails() {
           </View>
         </View>
       </View>
-      <Pressable className="bg-background-yellow rounded-2xl p-4 mt-16">
+      <Pressable
+        onPress={() => router.push(`/product/edit/${id}`)}
+        className="bg-background-yellow rounded-2xl p-4 mt-16"
+      >
         <CustomText className="text-dark-blue text-center text-base font-lexend-medium">
           Edit
         </CustomText>

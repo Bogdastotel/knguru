@@ -13,9 +13,8 @@ import {
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import { useCallback } from "react";
-import { View } from "react-native";
+import { useCallback, useEffect } from "react";
+import { StatusBar } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 
@@ -36,6 +35,10 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  useEffect(() => {
+    onLayoutRootView();
+  }, [onLayoutRootView]);
+
   if (!fontsLoaded) {
     // Async font loading only occurs in development.
     return null;
@@ -43,9 +46,10 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <Stack />
-      </View>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

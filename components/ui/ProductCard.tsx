@@ -70,7 +70,7 @@ export function ProductCard({
       </View>
       <View className="bg-background-price pt-4 px-4 pb-0.5 flex-row justify-between items-end">
         <CustomText className="text-primary-blue font-lexend-medium text-xl">
-          ${price}
+          ${price.toFixed(2)}
         </CustomText>
         <CustomText className="text-md font-lexend-medium text-primary-blue text-xl">
           {stock}

@@ -5,10 +5,10 @@ export default function Favorites() {
   return (
     <ScrollView
       className="flex-1 px-4  bg-background"
-      contentContainerStyle={{ paddingBottom: 100, paddingTop: 4 }}
+      contentContainerStyle={{ paddingBottom: 100, paddingTop: 80 }}
     >
       {/* <Text className="text-lg font-bold font-lexend-medium">Favorites</Text> */}
-      <CustomText className="text-2xl font-bold font-lexend-medium mt-20">
+      <CustomText className="text-product-title-lg font-bold font-lexend-medium mb-4">
         Favorites
       </CustomText>
       <View className="my-2">

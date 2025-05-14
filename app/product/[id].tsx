@@ -10,8 +10,8 @@ import { CustomText } from "@/components/ui/CustomText";
 import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Pressable, ScrollView, View } from "react-native";
 
 // Define Product type
 type Product = {
@@ -56,12 +56,41 @@ export default function ProductDetails() {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [prevFav, setPrevFav] = useState(isFavorite(String(id)));
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: () => fetchProduct(id),
     enabled: !!id,
   });
+
+  const isFav = isFavorite(String(product?.id));
+  const heartAnim = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (isFav && !prevFav) {
+      heartAnim.setValue(0.5);
+      Animated.spring(heartAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 2,
+        tension: 200,
+      }).start();
+    } else if (!isFav && prevFav) {
+      Animated.timing(heartAnim, {
+        toValue: 0.5,
+        duration: 80,
+        useNativeDriver: true,
+      }).start(() => {
+        Animated.spring(heartAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+          friction: 2,
+          tension: 200,
+        }).start();
+      });
+    }
+    setPrevFav(isFav);
+  }, [isFav]);
 
   function chunkArray(array: string[], size: number) {
     const result = [];
@@ -97,11 +126,9 @@ export default function ProductDetails() {
         <Pressable
           onPress={() => product && toggleFavorite(String(product.id))}
         >
-          {isFavorite(String(product?.id)) ? (
-            <RedHeart />
-          ) : (
-            <Heart color="#566A7C" />
-          )}
+          <Animated.View style={{ transform: [{ scale: heartAnim }] }}>
+            {isFav ? <RedHeart /> : <Heart color="#566A7C" />}
+          </Animated.View>
         </Pressable>
       </View>
       <CustomText className="text-body font-lexend-semibold text-secondary mb-1 mt-6">

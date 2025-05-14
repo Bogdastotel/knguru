@@ -1,7 +1,8 @@
 import Heart from "@/assets/icons/heart.svg";
 import RedHeart from "@/assets/icons/redHeart.svg";
 import { useFavoritesStore } from "@/lib/favoritesStore";
-import { Pressable, StyleProp, View, ViewStyle } from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, Pressable, StyleProp, View, ViewStyle } from "react-native";
 import { CustomText } from "./CustomText";
 
 interface ProductCardProps {
@@ -30,6 +31,19 @@ export function ProductCard({
   style,
 }: ProductCardProps) {
   const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const heartAnim = useRef(new Animated.Value(1)).current;
+  const isFav = isFavorite(String(id));
+  useEffect(() => {
+    if (isFav) {
+      heartAnim.setValue(0.5);
+      Animated.spring(heartAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 4,
+        tension: 120,
+      }).start();
+    }
+  }, [isFav]);
   return (
     <Pressable
       className="bg-card rounded-2xl pt-4 active:opacity-70"
@@ -47,7 +61,9 @@ export function ProductCard({
           }}
           hitSlop={10}
         >
-          {isFavorite(String(id)) ? <RedHeart /> : <Heart color="#2555E7" />}
+          <Animated.View style={{ transform: [{ scale: heartAnim }] }}>
+            {isFav ? <RedHeart /> : <Heart color="#2555E7" />}
+          </Animated.View>
         </Pressable>
       </View>
       <View className=" bg-stroke-primary h-px mx-4 my-4"></View>

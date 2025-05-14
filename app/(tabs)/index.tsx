@@ -1,4 +1,5 @@
 import Bell from "@/assets/icons/bell.svg";
+import Check from "@/assets/icons/check.svg";
 import ChevronRight from "@/assets/icons/chevron-right.svg";
 import Credits from "@/assets/icons/credits.svg";
 import Invite from "@/assets/icons/invite.svg";
@@ -8,9 +9,12 @@ import { ProductCard } from "@/components/ui/ProductCard";
 import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Dimensions,
   FlatList,
+  Modal,
   Pressable,
   Share,
   TextInput,
@@ -43,14 +47,44 @@ const fetchProducts = async () => {
 export default function HomeScreen() {
   const router = useRouter();
   const { favorites } = useFavoritesStore();
+  const [showNotifModal, setShowNotifModal] = useState(false);
+  const notifAnim = useRef(new Animated.Value(0)).current;
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const creditsAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (showNotifModal) {
+      notifAnim.setValue(0);
+      Animated.spring(notifAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 2,
+        tension: 200,
+      }).start();
+    }
+  }, [showNotifModal]);
+
+  useEffect(() => {
+    if (showCreditsModal) {
+      creditsAnim.setValue(0);
+      Animated.spring(creditsAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 2,
+        tension: 200,
+      }).start();
+    }
+  }, [showCreditsModal]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
 
-  const products = data?.products || [];
-  const favoriteProducts = products.filter((p) => favorites.has(String(p.id)));
+  const products: Product[] = data?.products || [];
+  const favoriteProducts = products.filter((p: Product) =>
+    favorites.has(String(p.id))
+  );
 
   const handleInvite = async () => {
     try {
@@ -80,15 +114,21 @@ export default function HomeScreen() {
         ListHeaderComponent={() => (
           <View>
             <View className="flex-row justify-between align-center items-center pl-4 mb-7 mt-20">
-              <View className="flex-row items-center bg-white rounded-full px-1 py-1">
+              <Pressable
+                className="flex-row items-center bg-white rounded-full px-1 py-1"
+                onPress={() => setShowCreditsModal(true)}
+              >
                 <Credits />
                 <CustomText className="text-xs text-dark-blue font-lexend ml-2.5 mr-3">
                   512 credits
                 </CustomText>
-              </View>
-              <View className="mr-6 justify-center ">
+              </Pressable>
+              <Pressable
+                className="mr-6 justify-center"
+                onPress={() => setShowNotifModal(true)}
+              >
                 <Bell />
-              </View>
+              </Pressable>
             </View>
             <View className="bg-white rounded-2xl flex-row items-center px-4 mx-4 py-2.5 mb-10">
               <View className="mr-3">
@@ -202,6 +242,74 @@ export default function HomeScreen() {
           </View>
         )}
       />
+      <Modal
+        visible={showNotifModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowNotifModal(false)}
+      >
+        <View className="flex-1 bg-dark-blue justify-center items-center">
+          <View className="items-center mt-20">
+            <Animated.View
+              style={{
+                transform: [{ scale: notifAnim }],
+                opacity: notifAnim,
+                marginBottom: 24,
+              }}
+            >
+              <Check width={64} height={64} />
+            </Animated.View>
+            <CustomText className="text-white text-4xl font-lexend-bold mb-2 text-center">
+              No new notifications
+            </CustomText>
+            <CustomText className="text-white text-base mb-8 text-center">
+              You&apos;re all caught up!
+            </CustomText>
+            <Pressable
+              className="bg-[#FFD500] rounded-xl px-8 py-3 w-64"
+              onPress={() => setShowNotifModal(false)}
+            >
+              <CustomText className="text-dark-blue text-center text-lg font-lexend-bold">
+                Close
+              </CustomText>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showCreditsModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowCreditsModal(false)}
+      >
+        <View className="flex-1 bg-dark-blue justify-center items-center">
+          <View className="items-center mt-20">
+            <Animated.View
+              style={{
+                transform: [{ scale: creditsAnim }],
+                opacity: creditsAnim,
+                marginBottom: 24,
+              }}
+            >
+              <Credits width={64} height={64} />
+            </Animated.View>
+            <CustomText className="text-white text-4xl font-lexend-bold mb-2 text-center">
+              Credits
+            </CustomText>
+            <CustomText className="text-white text-base mb-8 text-center">
+              You currently have only 512 credits.
+            </CustomText>
+            <Pressable
+              className="bg-[#FFD500] rounded-xl px-8 py-3 w-64"
+              onPress={() => setShowCreditsModal(false)}
+            >
+              <CustomText className="text-dark-blue text-center text-lg font-lexend-bold">
+                Close
+              </CustomText>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

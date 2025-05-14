@@ -4,9 +4,10 @@ import Trash from "@/assets/icons/delete.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
   Modal,
   Pressable,
   ScrollView,
@@ -20,7 +21,6 @@ type Product = {
   title: string;
   description: string;
   tags: string[];
-  // add other fields as needed
 };
 
 const fetchProduct = async (id: string | string[] | undefined) => {
@@ -39,6 +39,7 @@ export default function EditProduct() {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const checkAnim = useRef(new Animated.Value(0)).current;
 
   const { data: product, isLoading } = useQuery<Product>({
     queryKey: ["product", id],
@@ -54,6 +55,18 @@ export default function EditProduct() {
       setTags(product.tags || []);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (showModal) {
+      checkAnim.setValue(0);
+      Animated.spring(checkAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 5,
+        tension: 80,
+      }).start();
+    }
+  }, [showModal]);
 
   const handleAddTag = () => {
     if (newTag.trim()) {
@@ -211,7 +224,15 @@ export default function EditProduct() {
       >
         <View className="flex-1 bg-dark-blue justify-center items-center">
           <View className="items-center mt-20">
-            <Check width={64} height={64} style={{ marginBottom: 24 }} />
+            <Animated.View
+              style={{
+                transform: [{ scale: checkAnim }],
+                opacity: checkAnim,
+                marginBottom: 24,
+              }}
+            >
+              <Check width={64} height={64} />
+            </Animated.View>
             <CustomText className="text-white text-4xl font-lexend-bold mb-2 text-center">
               Product updated!
             </CustomText>

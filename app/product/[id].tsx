@@ -3,35 +3,78 @@ import ShieldCheck from "@/assets/icons/badge.svg";
 import Deposit from "@/assets/icons/deposit.svg";
 import Heart from "@/assets/icons/heart.svg";
 import HelperIcon from "@/assets/icons/helper.svg";
+import RedHeart from "@/assets/icons/redHeart.svg";
 import Star from "@/assets/icons/star.svg";
 import WorkerIcon from "@/assets/icons/worker.svg";
 import { CustomText } from "@/components/ui/CustomText";
+import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
+
+// Define Product type
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  tags: string[];
+  brand: string;
+  thumbnail?: string;
+  images?: string[];
+  warrantyInformation?: string;
+  createdAt?: string;
+};
+
+type Comment = {
+  id: number;
+  body: string;
+  postId: number;
+  likes: number;
+  user: {
+    id: number;
+    username: string;
+    fullName: string;
+  };
+};
 
 export default function ProductDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
-  // Dummy data for demonstration
-  const product = {
-    title: "Product title",
-    createdAt: "Jan 23, 2025",
-    description:
-      "We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown L.A. The job includes...",
-    category: "Category name",
-    workers: [
-      { label: "2 professionals", rate: "36,00 €/h" },
-      { label: "1 helper", rate: "20,00 €/h" },
-    ],
-    price: "$9.99",
-    discount: "9.718",
-    rating: "4.94",
-    stock: "5",
-    tags: ["Beauty", "Mascara", "Tag"],
-    weight: "2",
-    warranty: "1 month warranty",
-  };
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    fetch(`https://dummyjson.com/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+
+    // Fetch all comments and filter for this product
+    fetch("https://dummyjson.com/comments")
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.comments.filter(
+          (c: Comment) => c.postId === Number(id)
+        );
+        setComments(filtered);
+      })
+      .catch(() => setComments([]));
+  }, [id]);
+
+  console.log("comment", comments);
 
   function chunkArray(array: string[], size: number) {
     const result = [];
@@ -41,7 +84,15 @@ export default function ProductDetails() {
     return result;
   }
 
-  const tagRows = chunkArray(product.tags, 2);
+  if (loading || !product) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
+      </View>
+    );
+  }
+
+  const tagRows = chunkArray(product.tags || [], 2);
 
   return (
     <ScrollView
@@ -56,12 +107,18 @@ export default function ProductDetails() {
         <CustomText className="text-base text-dark-blue font-lexend-medium">
           Project
         </CustomText>
-        <Pressable onPress={() => {}}>
-          <Heart color="#566A7C" />
+        <Pressable
+          onPress={() => product && toggleFavorite(String(product.id))}
+        >
+          {isFavorite(String(product?.id)) ? (
+            <RedHeart />
+          ) : (
+            <Heart color="#566A7C" />
+          )}
         </Pressable>
       </View>
       <CustomText className="text-body font-lexend-semibold text-secondary mb-1 mt-6">
-        Created at {product.createdAt}
+        Created at {product.createdAt || "-"}
       </CustomText>
       <CustomText
         className="font-lexend-semibold text-product-title-lg mb-2 mt-1"
@@ -69,12 +126,37 @@ export default function ProductDetails() {
       >
         {product.title}
       </CustomText>
-      <CustomText className="text-base text-secondary mb-2">
-        {product.description}{" "}
-        <CustomText className="text-primary-blue font-lexend-semibold">
-          Read more
-        </CustomText>
-      </CustomText>
+      {product.description &&
+        (product.description.length > 100 ? (
+          <CustomText className="text-base text-secondary mb-2">
+            {showFullDescription ? (
+              <>
+                {product.description + " "}
+                <Pressable onPress={() => setShowFullDescription(false)}>
+                  <CustomText className="text-primary-blue font-lexend-semibold">
+                    Read less
+                  </CustomText>
+                </Pressable>
+              </>
+            ) : (
+              <>
+                {product.description.slice(0, 100) + "... "}
+                <Pressable
+                  className="h-4"
+                  onPress={() => setShowFullDescription(true)}
+                >
+                  <CustomText className="text-primary-blue font-lexend-semibold">
+                    Read more
+                  </CustomText>
+                </Pressable>
+              </>
+            )}
+          </CustomText>
+        ) : (
+          <CustomText className="text-base text-secondary mb-2">
+            {product.description}
+          </CustomText>
+        ))}
       {/* Status cards */}
       <View className="flex-row mt-6 mb-4">
         <View className="flex-1 bg-white rounded-2xl p-3 mr-2">
@@ -106,7 +188,6 @@ export default function ProductDetails() {
             {product.category}
           </CustomText>
         </View>
-        {/* Worker rows */}
         <View className="space-y-3 ">
           <View className="flex-row  px-4 border-b border-stroke-primary items-center justify-between">
             <View className="flex-row items-center  pb-4">
@@ -167,7 +248,7 @@ export default function ProductDetails() {
         <View className="flex-row justify-between  border-b border-stroke-primary py-6.5 px-4">
           <CustomText className="text-base text-secondary">Discount</CustomText>
           <CustomText className="text-base font-lexend-medium text-dark-blue">
-            {product.discount}
+            {product.discountPercentage}
           </CustomText>
         </View>
         <View className="flex-row justify-between border-b border-stroke-primary py-6.5 px-4">
@@ -205,18 +286,15 @@ export default function ProductDetails() {
         </View>
         <View className="flex-row justify-between border-b border-stroke-primary py-6.5 px-4">
           <CustomText className="text-base text-secondary">Weight</CustomText>
-          <CustomText className="text-base font-lexend-medium text-dark-blue">
-            {product.weight}
-          </CustomText>
+          <CustomText className="text-base font-lexend-medium text-dark-blue"></CustomText>
         </View>
         <View className="flex-row justify-between border-b border-stroke-primary py-6.5 px-4">
           <CustomText className="text-base text-secondary">Warranty</CustomText>
           <CustomText className="text-base font-lexend-medium text-dark-blue">
-            {product.warranty}
+            {product.warrantyInformation || "-"}
           </CustomText>
         </View>
       </View>
-
       <View className="bg-white mb-4 rounded-2xl">
         <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between pt-3">
           <CustomText className="text-base font-lexend-semibold text-dark-blue">
@@ -295,6 +373,26 @@ export default function ProductDetails() {
           </View>
         </View>
       </View>
+      {comments.length > 0 && (
+        <View className="bg-white mb-4 rounded-2xl p-4">
+          <CustomText className="text-base font-lexend-semibold text-dark-blue mb-2">
+            Comments
+          </CustomText>
+          {comments.map((comment) => (
+            <View key={comment.id} className="mb-4">
+              <CustomText className="text-sm text-secondary mb-1">
+                {comment.user.fullName}
+              </CustomText>
+              <CustomText className="text-base text-dark-blue mb-2">
+                {comment.body}
+              </CustomText>
+              <CustomText className="text-xs text-secondary mb-2">
+                Likes: {comment.likes}
+              </CustomText>
+            </View>
+          ))}
+        </View>
+      )}
       <Pressable
         onPress={() => router.push(`/product/edit/${id}`)}
         className="bg-background-yellow rounded-2xl p-4 mt-16"

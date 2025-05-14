@@ -5,7 +5,9 @@ import Invite from "@/assets/icons/invite.svg";
 import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -15,33 +17,41 @@ import {
   View,
 } from "react-native";
 
-const PRODUCTS = [
-  {
-    title: "Product title",
-    description:
-      "We're looking for a skilled team to build a small commercial office (approx. 200 m²)...",
-    category: "Category name",
-    rating: 4.95,
-    brand: "Essence",
-    price: 450.0,
-    stock: 5,
-  },
-  {
-    title: "Product title",
-    description:
-      "We're looking for a skilled team to build a small commercial office (approx. 200 m²)...",
-    category: "Category name",
-    rating: 4.95,
-    brand: "Essence",
-    price: 450.0,
-    stock: 5,
-  },
-];
-
 const CARD_WIDTH = Dimensions.get("window").width * 0.8;
+
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  tags: string[];
+  brand: string;
+  thumbnail?: string;
+  images?: string[];
+};
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { favorites } = useFavoritesStore();
+
+  useEffect(() => {
+    fetch("https://dummyjson.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const favoriteProducts = products.filter((p) => favorites.has(String(p.id)));
+
   const handleInvite = async () => {
     try {
       await Share.share({
@@ -51,6 +61,14 @@ export default function HomeScreen() {
       console.log(error);
     }
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-background">
@@ -97,18 +115,18 @@ export default function HomeScreen() {
               </Pressable>
             </View>
             <FlatList
-              data={PRODUCTS}
+              data={products}
               horizontal
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(_, i) => `new-${i}`}
+              keyExtractor={(item) => `new-${item.id}`}
               renderItem={({ item, index }) => (
                 <ProductCard
                   {...item}
-                  onPress={() => router.push(`/product/${index}`)}
+                  onPress={() => router.push(`/product/${item.id}`)}
                   style={{
                     width: CARD_WIDTH,
                     marginLeft: index === 0 ? 16 : 8,
-                    marginRight: index === PRODUCTS.length - 1 ? 16 : 8,
+                    marginRight: index === products.length - 1 ? 16 : 8,
                   }}
                 />
               )}
@@ -134,18 +152,19 @@ export default function HomeScreen() {
                 </Pressable>
               </View>
               <FlatList
-                data={PRODUCTS}
+                data={favoriteProducts}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(_, i) => `fav-${i}`}
+                keyExtractor={(item) => `fav-${item.id}`}
                 renderItem={({ item, index }) => (
                   <ProductCard
                     {...item}
-                    onPress={() => router.push(`/product/${index}`)}
+                    onPress={() => router.push(`/product/${item.id}`)}
                     style={{
                       width: CARD_WIDTH,
                       marginLeft: index === 0 ? 16 : 8,
-                      marginRight: index === PRODUCTS.length - 1 ? 16 : 8,
+                      marginRight:
+                        index === favoriteProducts.length - 1 ? 16 : 8,
                     }}
                   />
                 )}

@@ -35,7 +35,7 @@ export function ProductCard({
         <CustomText className="font-lexend-medium  text-dark-blue text-product-title mb-1">
           {title}
         </CustomText>
-        <Heart />
+        <Heart color="#2555E7" />
       </View>
       <View className=" bg-stroke-primary h-px mx-4 my-4"></View>
       <CustomText

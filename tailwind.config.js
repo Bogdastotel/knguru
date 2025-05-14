@@ -13,6 +13,7 @@ module.exports = {
       primary: "#2555E7",
       secondary: "#22d3ee",
       accent: "#f59e0b",
+      "dark-blue": "#11273D",
     },
     extend: {
       colors: {
@@ -22,6 +23,7 @@ module.exports = {
         "main-blue": "#0E263ECC",
         card: "#FFFFFF",
         "stroke-primary": "#EBEEF1",
+        "stroke-secondary": "#F4F6F8",
         "dark-blue": "#11273D",
         "primary-blue": "#2555E7",
         secondary: "#566A7C",
@@ -39,6 +41,8 @@ module.exports = {
         base: ["16px", "24px"],
         lg: ["18px", "28px"],
         xl: ["20px", "28px"],
+        "product-title-lg": ["32px", "40px"],
+        "product-title-xl": ["40px", "48px"],
         // Add semantic names for product card
         "product-title": ["16px", "24px"],
         "product-meta": ["14px", "20px"],
@@ -50,6 +54,13 @@ module.exports = {
       height: {
         px: "1px",
         0.5: "0.5px",
+      },
+      width: {
+        "2/5": "40%",
+        "48p": "48%",
+      },
+      spacing: {
+        6.5: "26px",
       },
     },
   },

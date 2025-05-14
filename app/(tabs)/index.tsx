@@ -5,6 +5,7 @@ import Invite from "@/assets/icons/invite.svg";
 import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { useRouter } from "expo-router";
 import {
   Dimensions,
   FlatList,
@@ -37,9 +38,10 @@ const PRODUCTS = [
   },
 ];
 
-const CARD_WIDTH = Dimensions.get("window").width * 0.83;
+const CARD_WIDTH = Dimensions.get("window").width * 0.8;
 
 export default function HomeScreen() {
+  const router = useRouter();
   const handleInvite = async () => {
     try {
       await Share.share({
@@ -102,6 +104,7 @@ export default function HomeScreen() {
               renderItem={({ item, index }) => (
                 <ProductCard
                   {...item}
+                  onPress={() => router.push(`/product/${index}`)}
                   style={{
                     width: CARD_WIDTH,
                     marginLeft: index === 0 ? 16 : 8,
@@ -138,6 +141,7 @@ export default function HomeScreen() {
                 renderItem={({ item, index }) => (
                   <ProductCard
                     {...item}
+                    onPress={() => router.push(`/product/${index}`)}
                     style={{
                       width: CARD_WIDTH,
                       marginLeft: index === 0 ? 16 : 8,

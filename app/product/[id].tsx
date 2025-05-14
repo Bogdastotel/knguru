@@ -132,9 +132,12 @@ export default function ProductDetails() {
             {showFullDescription ? (
               <>
                 {product.description + " "}
-                <Pressable onPress={() => setShowFullDescription(false)}>
+                <Pressable
+                  className="h-4"
+                  onPress={() => setShowFullDescription(false)}
+                >
                   <CustomText className="text-primary-blue font-lexend-semibold">
-                    Read less
+                    Show less
                   </CustomText>
                 </Pressable>
               </>

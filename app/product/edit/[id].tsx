@@ -2,7 +2,7 @@ import BackIcon from "@/assets/icons/back.svg";
 import Trash from "@/assets/icons/delete.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -11,16 +11,33 @@ import {
   View,
 } from "react-native";
 
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  // add other fields as needed
+};
+
 export default function EditProduct() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  const [title, setTitle] = useState("Product title");
-  const [description, setDescription] = useState(
-    "We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown LA. The job includes lorem ipsum text goes here."
-  );
-  const [tags, setTags] = useState(["Beauty", "Mascara", "Tag"]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+
+  useEffect(() => {
+    if (!id) return;
+    fetch(`https://dummyjson.com/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTitle(data.title || "");
+        setDescription(data.description || "");
+        setTags(data.tags || []);
+      });
+  }, [id]);
 
   const handleAddTag = () => {
     if (newTag.trim()) {

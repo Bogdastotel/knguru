@@ -5,7 +5,14 @@ import Invite from "@/assets/icons/invite.svg";
 import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { Dimensions, FlatList, Pressable, TextInput, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  Share,
+  TextInput,
+  View,
+} from "react-native";
 
 const PRODUCTS = [
   {
@@ -30,9 +37,19 @@ const PRODUCTS = [
   },
 ];
 
-const CARD_WIDTH = Dimensions.get("window").width * 0.8;
+const CARD_WIDTH = Dimensions.get("window").width * 0.83;
 
 export default function HomeScreen() {
+  const handleInvite = async () => {
+    try {
+      await Share.share({
+        message: "Check out this app for finding skilled contractors!",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View className="flex-1 bg-background">
       <FlatList
@@ -145,7 +162,10 @@ export default function HomeScreen() {
               app and help them find the right talent while growing your
               network.
             </CustomText>
-            <Pressable className="bg-white rounded-xl py-2.5 items-center">
+            <Pressable
+              className="bg-white rounded-xl py-2.5 items-center"
+              onPress={handleInvite}
+            >
               <CustomText className="text-dark-blue text-center text-lg font-lexend-medium">
                 Invite business partner
               </CustomText>

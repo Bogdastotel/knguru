@@ -3,6 +3,7 @@ import ShieldCheck from "@/assets/icons/badge.svg";
 import Deposit from "@/assets/icons/deposit.svg";
 import Heart from "@/assets/icons/heart.svg";
 import HelperIcon from "@/assets/icons/helper.svg";
+import Star from "@/assets/icons/star.svg";
 import WorkerIcon from "@/assets/icons/worker.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -217,6 +218,85 @@ export default function ProductDetails() {
           <CustomText className="text-base font-lexend-medium text-dark-blue">
             {product.warranty}
           </CustomText>
+        </View>
+      </View>
+
+      <View className="bg-white mb-4 rounded-2xl">
+        <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between pt-3">
+          <CustomText className="text-base font-lexend-semibold text-dark-blue">
+            John Doe
+          </CustomText>
+        </View>
+        <View className="bg-white mb-4 rounded-b-2xl">
+          <View className="flex-row border-b border-stroke-primary py-4 px-4 items-center">
+            <Star />
+            <View className="ml-3">
+              <CustomText className="text-2xl font-lexend-medium text-dark-blue">
+                {4.92}
+              </CustomText>
+              <CustomText className="text-sm text-secondary">Rating</CustomText>
+            </View>
+            <View className=" bg-stroke-primary h-px mx-4 my-4"></View>
+          </View>
+          <View className="flex justify-between py-4 px-4">
+            <CustomText className="text-sm text-secondary">Comment</CustomText>
+            <CustomText className="text-sm text-dark-blue">
+              Very happy with my purchase!
+            </CustomText>
+          </View>
+        </View>
+      </View>
+      <View className="bg-white mb-4 rounded-2xl">
+        <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between pt-3">
+          <CustomText className="text-base font-lexend-semibold text-dark-blue">
+            John Doe
+          </CustomText>
+        </View>
+        <View className="bg-white mb-4 rounded-b-2xl">
+          <View className="flex-row border-b border-stroke-primary py-4 px-4 items-center">
+            <Star />
+            <View className="ml-3">
+              <CustomText className="text-2xl font-lexend-medium text-dark-blue">
+                {4.92}
+              </CustomText>
+              <CustomText className="text-sm text-secondary">Rating</CustomText>
+            </View>
+            <View className=" bg-stroke-primary h-px mx-4 my-4"></View>
+          </View>
+          <View className="flex justify-between py-4 px-4">
+            <CustomText className="text-sm text-secondary">Comment</CustomText>
+            <CustomText className="text-sm text-dark-blue">
+              Habitant aliquam sed odio diam amet. Lorem vestibulum leo amet
+              pellentesque eget sed. Ultrices viverra donec nulla magna
+              maecenas. Odio non est cras urna eleifend velit ut ut in. Aenean
+              faucibus.
+            </CustomText>
+          </View>
+        </View>
+      </View>
+      <View className="bg-white mb-4 rounded-2xl">
+        <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between pt-3">
+          <CustomText className="text-base font-lexend-semibold text-dark-blue">
+            John Doe
+          </CustomText>
+        </View>
+        <View className="bg-white mb-4 rounded-b-2xl">
+          <View className="flex-row border-b border-stroke-primary py-4 px-4 items-center">
+            <Star />
+            <View className="ml-3">
+              <CustomText className="text-2xl font-lexend-medium text-dark-blue">
+                {4.92}
+              </CustomText>
+              <CustomText className="text-sm text-secondary">Rating</CustomText>
+            </View>
+            <View className=" bg-stroke-primary h-px mx-4 my-4"></View>
+          </View>
+          <View className="flex justify-between py-4 px-4">
+            <CustomText className="text-sm text-secondary">Comment</CustomText>
+            <CustomText className="text-sm text-dark-blue">
+              Very happy with my purchase!
+            </CustomText>
+          </View>
         </View>
       </View>
     </ScrollView>

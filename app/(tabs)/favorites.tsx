@@ -11,10 +11,10 @@ export default function Favorites() {
       <CustomText className="text-2xl font-bold font-lexend-medium mt-20">
         Favorites
       </CustomText>
-      <View className="my-4">
+      <View className="my-2">
         <ProductCard
           title="Product title"
-          description="Product description"
+          description="We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown LA. The job includes.."
           category="Category Home"
           brand="Essence"
           rating={4.95}
@@ -22,10 +22,10 @@ export default function Favorites() {
           stock={10}
         />
       </View>
-      <View className="my-4">
+      <View className="my-2">
         <ProductCard
           title="Product title"
-          description="Product description"
+          description="We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown LA. The job includes.."
           category="Category Home"
           brand="Essence"
           rating={4.95}
@@ -33,10 +33,10 @@ export default function Favorites() {
           stock={10}
         />
       </View>
-      <View className="my-4">
+      <View className="my-2">
         <ProductCard
           title="Product title"
-          description="Product description"
+          description="We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown LA. The job includes.."
           category="Category Home"
           brand="Essence"
           rating={4.95}
@@ -44,10 +44,10 @@ export default function Favorites() {
           stock={10}
         />
       </View>
-      <View className="my-4">
+      <View className="my-2">
         <ProductCard
           title="Product title"
-          description="Product description"
+          description="We're looking for a skilled team to build a small commercial office (approx. 200 m²) in downtown LA. The job includes.."
           category="Category Home"
           brand="Essence"
           rating={4.95}

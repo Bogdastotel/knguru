@@ -46,11 +46,11 @@ export default function ProductDetails() {
   return (
     <ScrollView
       className="flex-1 bg-background px-4"
-      contentContainerStyle={{ paddingBottom: 100 }}
+      contentContainerStyle={{ paddingBottom: 64 }}
     >
       {/* Header */}
       <View className="flex-row items-center justify-between mt-20 mb-2">
-        <Pressable onPress={() => router.back()}>
+        <Pressable hitSlop={20} onPress={() => router.back()}>
           <Back />
         </Pressable>
         <CustomText className="text-base text-dark-blue font-lexend-medium">
@@ -94,13 +94,10 @@ export default function ProductDetails() {
           <CustomText className="text-sm text-secondary">Deposit</CustomText>
         </View>
       </View>
-      {/* Details Card - Updated */}
       <CustomText className="text-xl font-lexend-semibold text-dark-blue mb-4 mt-8">
         Details
       </CustomText>
       <View className="bg-white rounded-2xl mb-4">
-        {/* Header */}
-
         <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between mb-4 pt-3">
           <CustomText className="text-base font-lexend-semibold text-dark-blue">
             Category
@@ -159,7 +156,6 @@ export default function ProductDetails() {
           </View>
         </View>
       </View>
-      {/* Details */}
 
       <View className="bg-white rounded-2xl mb-4">
         <View className="flex-row justify-between border-b border-stroke-primary py-6.5 px-4">
@@ -299,6 +295,11 @@ export default function ProductDetails() {
           </View>
         </View>
       </View>
+      <Pressable className="bg-background-yellow rounded-2xl p-4 mt-16">
+        <CustomText className="text-dark-blue text-center text-base font-lexend-medium">
+          Edit
+        </CustomText>
+      </Pressable>
     </ScrollView>
   );
 }

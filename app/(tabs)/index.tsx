@@ -136,7 +136,7 @@ export default function HomeScreen() {
           </View>
         )}
         renderItem={({ item, index }) =>
-          index === 1 ? (
+          index === 1 && favoriteProducts.length > 0 ? (
             <View>
               <View className="flex-row justify-between items-center pl-4 mt-10 mb-4">
                 <CustomText className="text-2xl text-dark-blue font-lexend-semibold">

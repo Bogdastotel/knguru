@@ -4,6 +4,7 @@ import { CustomText } from "@/components/ui/CustomText";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Pressable,
   ScrollView,
   TextInput,
@@ -48,6 +49,28 @@ export default function EditProduct() {
 
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
+  };
+
+  const handleUpdate = () => {
+    fetch(`https://dummyjson.com/products/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        description,
+        tags,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTitle(data.title || "");
+        setDescription(data.description || "");
+        setTags(data.tags || []);
+        Alert.alert("Success", "Product updated successfully (simulated)!");
+      })
+      .catch((err) => {
+        Alert.alert("Error", "Failed to update product.");
+      });
   };
 
   return (
@@ -155,7 +178,10 @@ export default function EditProduct() {
               Back
             </CustomText>
           </Pressable>
-          <Pressable className="bg-background-yellow w-1/2 rounded-xl py-3 px-8 items-center">
+          <Pressable
+            className="bg-background-yellow w-1/2 rounded-xl py-3 px-8 items-center"
+            onPress={handleUpdate}
+          >
             <CustomText className="text-dark-blue font-lexend-medium text-base">
               Next
             </CustomText>

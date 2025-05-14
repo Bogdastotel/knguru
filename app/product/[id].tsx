@@ -74,8 +74,6 @@ export default function ProductDetails() {
       .catch(() => setComments([]));
   }, [id]);
 
-  console.log("comment", comments);
-
   function chunkArray(array: string[], size: number) {
     const result = [];
     for (let i = 0; i < array.length; i += size) {
@@ -118,7 +116,7 @@ export default function ProductDetails() {
         </Pressable>
       </View>
       <CustomText className="text-body font-lexend-semibold text-secondary mb-1 mt-6">
-        Created at {product.createdAt || "-"}
+        Created at {product.createdAt || "Jan 23 2025"}
       </CustomText>
       <CustomText
         className="font-lexend-semibold text-product-title-lg mb-2 mt-1"

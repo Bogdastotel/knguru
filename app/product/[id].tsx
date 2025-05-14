@@ -8,8 +8,9 @@ import Star from "@/assets/icons/star.svg";
 import WorkerIcon from "@/assets/icons/worker.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useFavoritesStore } from "@/lib/favoritesStore";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
 // Define Product type
@@ -42,37 +43,25 @@ type Comment = {
   };
 };
 
+const fetchProduct = async (id: string | string[] | undefined) => {
+  if (!id) throw new Error("No product id");
+  const res = await fetch(`https://dummyjson.com/products/${id}`);
+  if (!res.ok) throw new Error("Network response was not ok");
+  return res.json();
+};
+
 export default function ProductDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [comments, setComments] = useState<Comment[]>([]);
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
 
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    fetch(`https://dummyjson.com/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-
-    // Fetch all comments and filter for this product
-    fetch("https://dummyjson.com/comments")
-      .then((res) => res.json())
-      .then((data) => {
-        const filtered = data.comments.filter(
-          (c: Comment) => c.postId === Number(id)
-        );
-        setComments(filtered);
-      })
-      .catch(() => setComments([]));
-  }, [id]);
+  const { data: product, isLoading } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProduct(id),
+    enabled: !!id,
+  });
 
   function chunkArray(array: string[], size: number) {
     const result = [];
@@ -82,7 +71,7 @@ export default function ProductDetails() {
     return result;
   }
 
-  if (loading || !product) {
+  if (isLoading || !product) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
@@ -374,26 +363,7 @@ export default function ProductDetails() {
           </View>
         </View>
       </View>
-      {comments.length > 0 && (
-        <View className="bg-white mb-4 rounded-2xl p-4">
-          <CustomText className="text-base font-lexend-semibold text-dark-blue mb-2">
-            Comments
-          </CustomText>
-          {comments.map((comment) => (
-            <View key={comment.id} className="mb-4">
-              <CustomText className="text-sm text-secondary mb-1">
-                {comment.user.fullName}
-              </CustomText>
-              <CustomText className="text-base text-dark-blue mb-2">
-                {comment.body}
-              </CustomText>
-              <CustomText className="text-xs text-secondary mb-2">
-                Likes: {comment.likes}
-              </CustomText>
-            </View>
-          ))}
-        </View>
-      )}
+
       <Pressable
         onPress={() => router.push(`/product/edit/${id}`)}
         className="bg-background-yellow rounded-2xl p-4 mt-16"

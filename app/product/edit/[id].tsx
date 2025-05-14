@@ -1,10 +1,13 @@
 import BackIcon from "@/assets/icons/back.svg";
+import Check from "@/assets/icons/check.svg";
 import Trash from "@/assets/icons/delete.svg";
 import { CustomText } from "@/components/ui/CustomText";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
+  Modal,
   Pressable,
   ScrollView,
   TextInput,
@@ -20,6 +23,13 @@ type Product = {
   // add other fields as needed
 };
 
+const fetchProduct = async (id: string | string[] | undefined) => {
+  if (!id) throw new Error("No product id");
+  const res = await fetch(`https://dummyjson.com/products/${id}`);
+  if (!res.ok) throw new Error("Network response was not ok");
+  return res.json();
+};
+
 export default function EditProduct() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
@@ -28,17 +38,22 @@ export default function EditProduct() {
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
+  const { data: product, isLoading } = useQuery<Product>({
+    queryKey: ["product", id],
+    queryFn: () => fetchProduct(id),
+    enabled: !!id,
+  });
+
+  // Prefill form fields when product is loaded
   useEffect(() => {
-    if (!id) return;
-    fetch(`https://dummyjson.com/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTitle(data.title || "");
-        setDescription(data.description || "");
-        setTags(data.tags || []);
-      });
-  }, [id]);
+    if (product) {
+      setTitle(product.title || "");
+      setDescription(product.description || "");
+      setTags(product.tags || []);
+    }
+  }, [product]);
 
   const handleAddTag = () => {
     if (newTag.trim()) {
@@ -66,7 +81,7 @@ export default function EditProduct() {
         setTitle(data.title || "");
         setDescription(data.description || "");
         setTags(data.tags || []);
-        Alert.alert("Success", "Product updated successfully (simulated)!");
+        setShowModal(true);
       })
       .catch((err) => {
         Alert.alert("Error", "Failed to update product.");
@@ -188,6 +203,35 @@ export default function EditProduct() {
           </Pressable>
         </View>
       </ScrollView>
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowModal(false)}
+      >
+        <View className="flex-1 bg-dark-blue justify-center items-center">
+          <View className="items-center mt-20">
+            <Check width={64} height={64} style={{ marginBottom: 24 }} />
+            <CustomText className="text-white text-4xl font-lexend-bold mb-2 text-center">
+              Product updated!
+            </CustomText>
+            <CustomText className="text-white text-base mb-8 text-center">
+              Successfully updated the product!
+            </CustomText>
+            <Pressable
+              className="bg-[#FFD500] rounded-xl px-8 py-3 w-64"
+              onPress={() => {
+                setShowModal(false);
+                router.replace("/");
+              }}
+            >
+              <CustomText className="text-dark-blue text-center text-lg font-lexend-bold">
+                Back to home
+              </CustomText>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

@@ -6,8 +6,8 @@ import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { useFavoritesStore } from "@/lib/favoritesStore";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -34,22 +34,22 @@ type Product = {
   images?: string[];
 };
 
+const fetchProducts = async () => {
+  const res = await fetch("https://dummyjson.com/products");
+  if (!res.ok) throw new Error("Network response was not ok");
+  return res.json();
+};
+
 export default function HomeScreen() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const { favorites } = useFavoritesStore();
 
-  useEffect(() => {
-    fetch("https://dummyjson.com/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.products);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  const { data, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
 
+  const products = data?.products || [];
   const favoriteProducts = products.filter((p) => favorites.has(String(p.id)));
 
   const handleInvite = async () => {
@@ -62,7 +62,7 @@ export default function HomeScreen() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
@@ -105,7 +105,10 @@ export default function HomeScreen() {
               <CustomText className="text-2xl text-dark-blue font-lexend-semibold">
                 New products
               </CustomText>
-              <Pressable className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70">
+              <Pressable
+                onPress={() => router.push("/listings")}
+                className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70"
+              >
                 <CustomText className="font-lexend text-sm text-center text-dark-blue pl-1">
                   View all
                 </CustomText>
@@ -142,7 +145,10 @@ export default function HomeScreen() {
                 <CustomText className="text-2xl text-dark-blue font-lexend-semibold">
                   Favorite products
                 </CustomText>
-                <Pressable className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70">
+                <Pressable
+                  onPress={() => router.push("/favorites")}
+                  className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70"
+                >
                   <CustomText className="font-lexend text-sm text-center text-dark-blue pl-1">
                     View all
                   </CustomText>

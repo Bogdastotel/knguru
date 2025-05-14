@@ -11,6 +11,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect } from "react";
@@ -19,6 +20,8 @@ import "react-native-reanimated";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -45,19 +48,22 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen name="product/[id]" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="product/edit/[id]"
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="product/[id]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="product/edit/[id]"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="listings" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

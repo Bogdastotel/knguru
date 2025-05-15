@@ -1,4 +1,4 @@
-package com.knguru
+package com.bogdastotel.knguru
 
 import android.app.Application
 import android.content.res.Configuration

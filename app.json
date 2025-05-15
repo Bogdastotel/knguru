@@ -10,13 +10,15 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bogdastotel.knguru"
+      "bundleIdentifier": "com.bogdastotel.knguru",
+      "icon": "./assets/images/icon.png"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "icon": "./assets/images/icon.png",
       "edgeToEdgeEnabled": true,
       "package": "com.bogdastotel.knguru"
     },

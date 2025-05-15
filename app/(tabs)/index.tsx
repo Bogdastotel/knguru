@@ -99,33 +99,38 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-background px-4 pt-20">
-        <View className="flex-row justify-between items-center mb-10">
-          <Skeleton width={120} height={44} borderRadius={16} />
-          <Skeleton width={32} height={32} borderRadius={16} />
+      <View className="flex-1 bg-background px-4 pt-16">
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 28,
+          }}
+        >
+          <Skeleton width={120} height={32} borderRadius={16} style={{}} />
+          <Skeleton width={32} height={32} borderRadius={16} style={{}} />
         </View>
         <Skeleton
           width={"100%"}
-          height={56}
+          height={44}
           borderRadius={16}
-          style={{ marginBottom: 12 }}
+          style={{ marginBottom: 32 }}
         />
-
-        <View className="flex-row justify-between items-center mt-10">
-          <Skeleton width={"50%"} height={32} />
-          <Skeleton width={"30%"} height={32} />
-        </View>
+        <Skeleton
+          width={160}
+          height={28}
+          borderRadius={8}
+          style={{ marginBottom: 16 }}
+        />
         <View style={{ flexDirection: "row" }}>
           <Skeleton
-            width={324}
-            height={289}
+            width={260}
+            height={220}
             borderRadius={24}
             style={{ marginRight: 16 }}
           />
-          <Skeleton width={324} height={289} borderRadius={24} />
-        </View>
-        <View className="mt-7 justify-center items-center px-2">
-          <Skeleton width={"100%"} height={223} borderRadius={24} />
+          <Skeleton width={260} height={220} borderRadius={24} style={{}} />
         </View>
       </View>
     );

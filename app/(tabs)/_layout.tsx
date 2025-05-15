@@ -5,6 +5,7 @@ import { Platform } from "react-native";
 import FavoritesIcon from "@/assets/icons/favorites.svg";
 import HomeIcon from "@/assets/icons/home.svg";
 import ListingsIcon from "@/assets/icons/listings.svg";
+import ProfileIcon from "@/assets/icons/profile.svg";
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
@@ -54,6 +55,15 @@ export default function TabLayout() {
           title: "Listings",
           tabBarIcon: ({ color }) => (
             <ListingsIcon width={24} height={24} color={color} fill={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <ProfileIcon width={24} height={24} color={color} fill={color} />
           ),
         }}
       />

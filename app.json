@@ -11,12 +11,17 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bogdastotel.knguru",
-      "icon": "./assets/images/icon.png"
+      "icon": {
+        "dark": "./assets/images/ios-dark.png",
+        "light": "./assets/images/ios-light.png",
+        "tinted": "./assets/images/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "monochromeImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff",
       },
       "icon": "./assets/images/icon.png",
       "edgeToEdgeEnabled": true,
@@ -32,10 +37,16 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash-icon-dark.png",
           "imageWidth": 200,
-          "resizeMode": "cover",
-          "backgroundColor": "#0E263E "
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "image": "./assets/images/splash-icon-light.png",
+            "imageWidth": 200,
+            "resizeMode": "contain",
+            "backgroundColor": "#000000"
+          }
         }
       ],
       "expo-font"

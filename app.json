@@ -4,14 +4,14 @@
     "slug": "knguru",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon-knguru.png",
     "scheme": "knguru",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bogdastotel.knguru",
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/images/icon-knguru.png"
     },
     "android": {
       "adaptiveIcon": {

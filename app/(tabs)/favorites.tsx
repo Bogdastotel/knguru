@@ -1,5 +1,6 @@
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -40,8 +41,17 @@ export default function Favorites() {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
+      <View className="flex-1 bg-background px-4 pt-20">
+        <CustomText className="text-product-title-lg font-bold font-lexend-medium mb-4 mt-10">
+          Favorites
+        </CustomText>
+        <View className="flex-col space-y-4 mt-4">
+          {[1, 2, 3].map((_, i) => (
+            <View key={i} className="my-2">
+              <Skeleton width={"100%"} height={289} borderRadius={24} />
+            </View>
+          ))}
+        </View>
       </View>
     );
   }

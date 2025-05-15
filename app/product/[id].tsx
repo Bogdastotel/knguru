@@ -7,6 +7,7 @@ import RedHeart from "@/assets/icons/redHeart.svg";
 import Star from "@/assets/icons/star.svg";
 import WorkerIcon from "@/assets/icons/worker.svg";
 import { CustomText } from "@/components/ui/CustomText";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -88,8 +89,93 @@ export default function ProductDetails() {
 
   if (isLoading || !product) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
+      <View className="flex-1 bg-background px-4 pt-20">
+        {/* Header skeleton */}
+        <View className="flex-row items-center justify-between mb-2">
+          <Skeleton width={24} height={24} borderRadius={12} />
+          <Skeleton width={60} height={24} borderRadius={12} />
+          <Skeleton width={24} height={24} borderRadius={12} />
+        </View>
+
+        {/* Title and description skeletons */}
+        <Skeleton
+          width={"40%"}
+          height={20}
+          borderRadius={8}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          width={"80%"}
+          height={32}
+          borderRadius={8}
+          style={{ marginTop: 8 }}
+        />
+        <Skeleton
+          width={"100%"}
+          height={80}
+          borderRadius={8}
+          style={{ marginTop: 8 }}
+        />
+
+        {/* Status cards skeletons */}
+        <View className="flex-row mt-6 mb-4">
+          <View className="flex-1 mr-2">
+            <Skeleton width={"100%"} height={120} borderRadius={16} />
+          </View>
+          <View className="flex-1 ml-2">
+            <Skeleton width={"100%"} height={120} borderRadius={16} />
+          </View>
+        </View>
+
+        {/* Details section skeletons */}
+        <Skeleton
+          width={"30%"}
+          height={28}
+          borderRadius={8}
+          style={{ marginTop: 32, marginBottom: 16 }}
+        />
+        <View className="bg-white rounded-2xl mb-4">
+          <View className="flex-row rounded-t-2xl bg-stroke-secondary px-4 pb-3 justify-between mb-4 pt-3">
+            <Skeleton width={"30%"} height={24} borderRadius={8} />
+            <Skeleton width={"40%"} height={24} borderRadius={8} />
+          </View>
+          {[1, 2, 3].map((_, i) => (
+            <View
+              key={i}
+              className="flex-row px-4 border-b border-stroke-primary items-center justify-between py-4"
+            >
+              <View className="flex-row items-center">
+                <Skeleton width={40} height={40} borderRadius={20} />
+                <Skeleton
+                  width={120}
+                  height={24}
+                  borderRadius={8}
+                  style={{ marginLeft: 8 }}
+                />
+              </View>
+              <Skeleton width={80} height={24} borderRadius={8} />
+            </View>
+          ))}
+        </View>
+
+        {/* Tags section skeletons */}
+        <Skeleton
+          width={"30%"}
+          height={28}
+          borderRadius={8}
+          style={{ marginTop: 32, marginBottom: 16 }}
+        />
+        <View className="flex-row flex-wrap">
+          {[1, 2, 3, 4].map((_, i) => (
+            <Skeleton
+              key={i}
+              width={100}
+              height={36}
+              borderRadius={18}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+          ))}
+        </View>
       </View>
     );
   }

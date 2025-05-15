@@ -8,6 +8,7 @@
     "scheme": "knguru",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bogdastotel.knguru",
@@ -21,7 +22,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#ffffff"
       },
       "icon": "./assets/images/icon.png",
       "edgeToEdgeEnabled": true,
@@ -32,11 +33,16 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "splash": {
+      "image": "./assets/images/splash-icon-dark.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0E263E"
+    },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
-        {
+        { 
           "image": "./assets/images/splash-icon-dark.png",
           "imageWidth": 200,
           "resizeMode": "contain",

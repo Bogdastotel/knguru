@@ -13,7 +13,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, ScrollView, View } from "react-native";
 
-// Define Product type
 type Product = {
   id: number;
   title: string;
@@ -31,18 +30,6 @@ type Product = {
   createdAt?: string;
 };
 
-type Comment = {
-  id: number;
-  body: string;
-  postId: number;
-  likes: number;
-  user: {
-    id: number;
-    username: string;
-    fullName: string;
-  };
-};
-
 const fetchProduct = async (id: string | string[] | undefined) => {
   if (!id) throw new Error("No product id");
   const res = await fetch(`https://dummyjson.com/products/${id}`);
@@ -55,7 +42,6 @@ export default function ProductDetails() {
   const router = useRouter();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([]);
   const [prevFav, setPrevFav] = useState(isFavorite(String(id)));
 
   const { data: product, isLoading } = useQuery({

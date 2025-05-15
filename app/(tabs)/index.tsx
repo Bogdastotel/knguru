@@ -6,6 +6,7 @@ import Invite from "@/assets/icons/invite.svg";
 import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useFavoritesStore } from "@/lib/favoritesStore";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -98,8 +99,34 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <CustomText className="text-lg text-dark-blue">Loading...</CustomText>
+      <View className="flex-1 bg-background px-4 pt-20">
+        <View className="flex-row justify-between items-center mb-10">
+          <Skeleton width={120} height={44} borderRadius={16} />
+          <Skeleton width={32} height={32} borderRadius={16} />
+        </View>
+        <Skeleton
+          width={"100%"}
+          height={56}
+          borderRadius={16}
+          style={{ marginBottom: 12 }}
+        />
+
+        <View className="flex-row justify-between items-center mt-10">
+          <Skeleton width={"50%"} height={32} />
+          <Skeleton width={"30%"} height={32} />
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Skeleton
+            width={324}
+            height={289}
+            borderRadius={24}
+            style={{ marginRight: 16 }}
+          />
+          <Skeleton width={324} height={289} borderRadius={24} />
+        </View>
+        <View className="mt-7 justify-center items-center px-2">
+          <Skeleton width={"100%"} height={223} borderRadius={24} />
+        </View>
       </View>
     );
   }

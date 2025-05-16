@@ -3,11 +3,13 @@ import Check from "@/assets/icons/check.svg";
 import ChevronRight from "@/assets/icons/chevron-right.svg";
 import Credits from "@/assets/icons/credits.svg";
 import Invite from "@/assets/icons/invite.svg";
-import Search from "@/assets/icons/search.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { SearchInput } from "@/components/ui/SearchInput";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useFavoritesStore } from "@/lib/favoritesStore";
+import { useDebounce } from "@/lib/useDebounce";
+import { fetchProducts, fetchSearchedProducts } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +20,6 @@ import {
   Modal,
   Pressable,
   Share,
-  TextInput,
   View,
 } from "react-native";
 
@@ -39,12 +40,6 @@ type Product = {
   images?: string[];
 };
 
-const fetchProducts = async () => {
-  const res = await fetch("https://dummyjson.com/products");
-  if (!res.ok) throw new Error("Network response was not ok");
-  return res.json();
-};
-
 export default function HomeScreen() {
   const router = useRouter();
   const { favorites } = useFavoritesStore();
@@ -52,6 +47,8 @@ export default function HomeScreen() {
   const notifAnim = useRef(new Animated.Value(0)).current;
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const creditsAnim = useRef(new Animated.Value(0)).current;
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
 
   useEffect(() => {
     if (showNotifModal) {
@@ -77,15 +74,27 @@ export default function HomeScreen() {
     }
   }, [showCreditsModal]);
 
+  const { data: searchedProducts, isLoading: isLoadingSearchedProducts } =
+    useQuery({
+      queryKey: ["search", debouncedSearch],
+      queryFn: () => fetchSearchedProducts(debouncedSearch),
+      enabled: !!debouncedSearch,
+    });
+
   const { data, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
+    enabled: !debouncedSearch,
   });
 
   const products: Product[] = data?.products || [];
   const favoriteProducts = products.filter((p: Product) =>
     favorites.has(String(p.id))
   );
+
+  const displayProducts = debouncedSearch
+    ? searchedProducts?.products
+    : products;
 
   const handleInvite = async () => {
     try {
@@ -138,6 +147,24 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-background">
+      <View className="flex-row justify-between align-center items-center pl-4 mb-7 mt-20">
+        <Pressable
+          className="flex-row items-center bg-white rounded-full px-1 py-1"
+          onPress={() => setShowCreditsModal(true)}
+        >
+          <Credits />
+          <CustomText className="text-xs text-dark-blue font-lexend ml-2.5 mr-3">
+            512 credits
+          </CustomText>
+        </Pressable>
+        <Pressable
+          className="mr-6 justify-center"
+          onPress={() => setShowNotifModal(true)}
+        >
+          <Bell />
+        </Pressable>
+      </View>
+      <SearchInput value={search} onChangeText={setSearch} />
       <FlatList
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 140 }}
@@ -145,69 +172,82 @@ export default function HomeScreen() {
         keyExtractor={(_, i) => i.toString()}
         ListHeaderComponent={() => (
           <View>
-            <View className="flex-row justify-between align-center items-center pl-4 mb-7 mt-20">
-              <Pressable
-                className="flex-row items-center bg-white rounded-full px-1 py-1"
-                onPress={() => setShowCreditsModal(true)}
-              >
-                <Credits />
-                <CustomText className="text-xs text-dark-blue font-lexend ml-2.5 mr-3">
-                  512 credits
-                </CustomText>
-              </Pressable>
-              <Pressable
-                className="mr-6 justify-center"
-                onPress={() => setShowNotifModal(true)}
-              >
-                <Bell />
-              </Pressable>
-            </View>
-            <View className="bg-white rounded-2xl flex-row items-center px-4 mx-4 py-2.5 mb-10">
-              <View className="mr-3">
-                <Search />
-              </View>
-              <TextInput
-                className="flex-1 text-base font-lexend pt-2 pb-2.5"
-                placeholder="Search for products"
-                placeholderTextColor="#566A7C"
-                textAlignVertical="center"
-              />
-            </View>
             <View className="flex-row justify-between items-center pl-4 mb-4">
               <CustomText className="text-2xl text-dark-blue font-lexend-semibold">
-                New products
+                {debouncedSearch
+                  ? isLoadingSearchedProducts
+                    ? "Searching..."
+                    : `${
+                        !displayProducts || displayProducts.length === 0
+                          ? "0 "
+                          : ""
+                      }Search Results`
+                  : "New products"}
               </CustomText>
-              <Pressable
-                onPress={() => router.push("/listings")}
-                className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70"
-              >
-                <CustomText className="font-lexend text-sm text-center text-dark-blue pl-1">
-                  View all
-                </CustomText>
-                <View className="ml-2">
-                  <ChevronRight />
-                </View>
-              </Pressable>
-            </View>
-            <FlatList
-              data={products}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => `new-${item.id}`}
-              renderItem={({ item, index }) => (
-                <ProductCard
-                  {...item}
-                  onPress={() => router.push(`/product/${item.id}`)}
-                  style={{
-                    width: CARD_WIDTH,
-                    marginLeft: index === 0 ? 16 : 8,
-                    marginRight: index === products.length - 1 ? 16 : 8,
-                  }}
-                />
+              {!debouncedSearch && (
+                <Pressable
+                  onPress={() => router.push("/listings")}
+                  className="bg-white rounded-10 flex-row items-center mx-4 px-3 py-2 active:opacity-70"
+                >
+                  <CustomText className="font-lexend text-sm text-center text-dark-blue pl-1">
+                    View all
+                  </CustomText>
+                  <View className="ml-2">
+                    <ChevronRight />
+                  </View>
+                </Pressable>
               )}
-              snapToInterval={CARD_WIDTH + 8}
-              decelerationRate="fast"
-            />
+            </View>
+            {debouncedSearch ? (
+              isLoadingSearchedProducts ? (
+                <View className="items-center justify-center py-20">
+                  <CustomText className="text-lg text-dark-blue">
+                    Searching...
+                  </CustomText>
+                </View>
+              ) : (
+                <FlatList
+                  data={displayProducts}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => `new-${item.id}`}
+                  renderItem={({ item, index }) => (
+                    <ProductCard
+                      {...item}
+                      onPress={() => router.push(`/product/${item.id}`)}
+                      style={{
+                        width: CARD_WIDTH,
+                        marginLeft: index === 0 ? 16 : 8,
+                        marginRight:
+                          index === displayProducts.length - 1 ? 16 : 8,
+                      }}
+                    />
+                  )}
+                  snapToInterval={CARD_WIDTH + 8}
+                  decelerationRate="fast"
+                />
+              )
+            ) : (
+              <FlatList
+                data={products}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => `new-${item.id}`}
+                renderItem={({ item, index }) => (
+                  <ProductCard
+                    {...item}
+                    onPress={() => router.push(`/product/${item.id}`)}
+                    style={{
+                      width: CARD_WIDTH,
+                      marginLeft: index === 0 ? 16 : 8,
+                      marginRight: index === products.length - 1 ? 16 : 8,
+                    }}
+                  />
+                )}
+                snapToInterval={CARD_WIDTH + 8}
+                decelerationRate="fast"
+              />
+            )}
           </View>
         )}
         renderItem={({ item, index }) =>

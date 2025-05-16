@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830899972117",
+    "project_id": "knguru-4cd17",
+    "storage_bucket": "knguru-4cd17.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830899972117:android:fc9af64bfc915fab85061c",
+        "android_client_info": {
+          "package_name": "com.bogdastotel.knguru"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHGmPX2zpd8Xaqa0KQgkDYFy-d26x4pSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

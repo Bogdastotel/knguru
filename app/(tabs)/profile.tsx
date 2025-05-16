@@ -39,9 +39,17 @@ export default function ProfileScreen() {
   if (!user) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <CustomText className="text-lg text-dark-blue">
+        <CustomText className="text-lg text-dark-blue mb-6">
           Not logged in
         </CustomText>
+        <Pressable
+          className="bg-[#FFD500] rounded-xl py-4 px-8 items-center active:opacity-80"
+          onPress={() => router.replace("/auth/login")}
+        >
+          <CustomText className="text-dark-blue text-lg font-lexend-bold">
+            Go to Login
+          </CustomText>
+        </Pressable>
       </View>
     );
   }

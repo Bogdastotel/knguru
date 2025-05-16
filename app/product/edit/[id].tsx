@@ -1,14 +1,17 @@
-import BackIcon from "@/assets/icons/back.svg";
+import Back from "@/assets/icons/back.svg";
 import Check from "@/assets/icons/check.svg";
 import Trash from "@/assets/icons/delete.svg";
 import { CustomText } from "@/components/ui/CustomText";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   TextInput,
@@ -30,9 +33,27 @@ const fetchProduct = async (id: string | string[] | undefined) => {
   return res.json();
 };
 
+const updateProduct = async ({
+  id,
+  data,
+}: {
+  id: string | string[] | undefined;
+  data: Partial<Product>;
+}) => {
+  if (!id) throw new Error("No product id");
+  const res = await fetch(`https://dummyjson.com/products/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Network response was not ok");
+  return res.json();
+};
+
 export default function EditProduct() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,6 +61,11 @@ export default function EditProduct() {
   const [newTag, setNewTag] = useState("");
   const [showModal, setShowModal] = useState(false);
   const checkAnim = useRef(new Animated.Value(0)).current;
+
+  // Track original values
+  const [originalTitle, setOriginalTitle] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
+  const [originalTags, setOriginalTags] = useState<string[]>([]);
 
   const { data: product, isLoading } = useQuery<Product>({
     queryKey: ["product", id],
@@ -53,8 +79,31 @@ export default function EditProduct() {
       setTitle(product.title || "");
       setDescription(product.description || "");
       setTags(product.tags || []);
+      // Store original values
+      setOriginalTitle(product.title || "");
+      setOriginalDescription(product.description || "");
+      setOriginalTags(product.tags || []);
     }
   }, [product]);
+
+  // Check if any changes were made
+  const hasChanges = useMemo(() => {
+    if (!product) return false;
+
+    const titleChanged = title !== originalTitle;
+    const descriptionChanged = description !== originalDescription;
+    const tagsChanged = JSON.stringify(tags) !== JSON.stringify(originalTags);
+
+    return titleChanged || descriptionChanged || tagsChanged;
+  }, [
+    title,
+    description,
+    tags,
+    originalTitle,
+    originalDescription,
+    originalTags,
+    product,
+  ]);
 
   useEffect(() => {
     if (showModal) {
@@ -79,43 +128,63 @@ export default function EditProduct() {
     setTags(tags.filter((_, i) => i !== index));
   };
 
+  const { mutate: updateProductMutation, isPending: isUpdating } = useMutation({
+    mutationFn: updateProduct,
+    onSuccess: (data) => {
+      // Update the cache with new data
+      queryClient.setQueryData(["product", id], data);
+      setShowModal(true);
+    },
+    onError: (error) => {
+      Alert.alert("Error", "Failed to update product.");
+    },
+  });
+
   const handleUpdate = () => {
-    fetch(`https://dummyjson.com/products/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    updateProductMutation({
+      id,
+      data: {
         title,
         description,
         tags,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setTitle(data.title || "");
-        setDescription(data.description || "");
-        setTags(data.tags || []);
-        setShowModal(true);
-      })
-      .catch((err) => {
-        Alert.alert("Error", "Failed to update product.");
-      });
+      },
+    });
   };
 
   return (
-    <View className="flex-1 bg-background">
-      <ScrollView>
-        {/* Header */}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 bg-background"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 60 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
         <View className="flex-row items-center justify-between mt-20 mb-6 px-4">
           <Pressable hitSlop={20} onPress={() => router.back()} className="p-2">
-            <BackIcon width={24} height={24} />
+            <Back width={24} height={24} />
           </Pressable>
           <CustomText className="text-base font-lexend-medium text-dark-blue">
             Edit product
           </CustomText>
-          <View style={{ width: 28 }} />
+          <Pressable
+            hitSlop={20}
+            onPress={handleUpdate}
+            disabled={!hasChanges || isUpdating}
+            className={`p-2 ${!hasChanges || isUpdating ? "opacity-50" : ""}`}
+          >
+            <CustomText className="text-dark-blue font-lexend-medium text-base">
+              {isUpdating ? "Saving..." : "Save"}
+            </CustomText>
+          </Pressable>
         </View>
+
         {/* Edit product section */}
-        <View className=" rounded-2xl p-4 mb-6 ">
+        <View className="rounded-2xl p-4 mb-6">
           <CustomText className="text-2xl font-lexend-medium text-dark-blue mb-6">
             Edit product
           </CustomText>
@@ -127,6 +196,8 @@ export default function EditProduct() {
             value={title}
             onChangeText={setTitle}
             style={{ paddingTop: 0, paddingBottom: 0, lineHeight: 20 }}
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
           />
           <CustomText className="text-base font-lexend-medium mb-2">
             Product description
@@ -138,6 +209,8 @@ export default function EditProduct() {
             multiline
             numberOfLines={3}
             style={{ minHeight: 80, textAlignVertical: "top" }}
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
           />
           <View className="bg-double-cell rounded-xl px-4 py-4 mb-2">
             <View className="flex-row items-center">
@@ -152,12 +225,12 @@ export default function EditProduct() {
         </View>
 
         {/* Tags section */}
-        <View className=" rounded-2xl p-4 mb-6 ">
+        <View className="rounded-2xl p-4 mb-6">
           <CustomText className="text-2xl font-lexend-semibold text-dark-blue mb-6">
             Tags
           </CustomText>
           {tags.map((tag, i) => (
-            <View key={i} className=" mb-4">
+            <View key={i} className="mb-4">
               <CustomText className="text-base text-dark-blue pb-2 font-lexend-medium mr-2 w-28">
                 Tag name<CustomText className="text-error">*</CustomText>
               </CustomText>
@@ -172,6 +245,8 @@ export default function EditProduct() {
                     setTags(newTags);
                   }}
                   textAlignVertical="center"
+                  returnKeyType="done"
+                  onSubmitEditing={Keyboard.dismiss}
                 />
                 <Pressable onPress={() => handleRemoveTag(i)} className="mx-4">
                   <Trash />
@@ -186,6 +261,8 @@ export default function EditProduct() {
             onChangeText={setNewTag}
             placeholder="New Tag name"
             placeholderTextColor="#A0AEC0"
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
           />
           <View className="">
             <TouchableOpacity
@@ -201,17 +278,23 @@ export default function EditProduct() {
 
         {/* Navigation buttons */}
         <View className="flex-row justify-between mt-14 mb-10 mx-4">
-          <Pressable className="bg-white w-48 rounded-xl py-3 px-8 items-center">
+          <Pressable
+            className="bg-white w-48 rounded-xl py-3 px-8 items-center"
+            onPress={() => router.back()}
+          >
             <CustomText className="text-dark-blue font-lexend-medium text-base">
               Back
             </CustomText>
           </Pressable>
           <Pressable
-            className="bg-background-yellow w-1/2 rounded-xl py-3 px-8 items-center"
+            className={`${
+              hasChanges ? "bg-background-yellow" : "bg-stroke-primary"
+            } w-1/2 rounded-xl py-3 px-8 items-center`}
             onPress={handleUpdate}
+            disabled={!hasChanges || isUpdating}
           >
             <CustomText className="text-dark-blue font-lexend-medium text-base">
-              Next
+              {isUpdating ? "Saving..." : "Save"}
             </CustomText>
           </Pressable>
         </View>
@@ -253,6 +336,6 @@ export default function EditProduct() {
           </View>
         </View>
       </Modal>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

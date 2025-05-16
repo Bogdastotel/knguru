@@ -193,7 +193,7 @@ export default function HomeScreen() {
       </Animated.View>
       <Animated.FlatList
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 140, paddingTop: 240 }}
+        contentContainerStyle={{ paddingBottom: 140, paddingTop: 230 }}
         data={[1, 2]}
         keyExtractor={(_, i) => i.toString()}
         onScroll={Animated.event(

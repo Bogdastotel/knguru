@@ -18,6 +18,17 @@ import { Alert, Pressable, TextInput, View } from "react-native";
 import "react-native-gesture-handler";
 import { auth } from "../../firebaseConfig";
 
+type AppUser = {
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  image: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
 export default function LoginScreen() {
   const router = useRouter();
   const [username, setUsername] = useState("michaelw");
@@ -25,7 +36,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
 
-  const [userInfo, setUserInfo] = React.useState();
+  const [userInfo, setUserInfo] = React.useState<AppUser | undefined>();
   const [loading, setLoading] = React.useState(false);
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     iosClientId:
@@ -67,9 +78,26 @@ export default function LoginScreen() {
     getLocalUser();
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await AsyncStorage.setItem("session-user", JSON.stringify(user));
-        console.log(JSON.stringify(user, null, 2));
-        setUserInfo(user);
+        // Transform Firebase user to match app's user structure
+        const transformedUser = {
+          id: user.uid,
+          username: user.email?.split("@")[0] || "",
+          email: user.email || "",
+          firstName: user.displayName?.split(" ")[0] || "",
+          lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
+          image: user.photoURL || "",
+          accessToken: await user.getIdToken(),
+          refreshToken: user.refreshToken,
+        };
+        await AsyncStorage.setItem(
+          "session-user",
+          JSON.stringify(transformedUser)
+        );
+        await AsyncStorage.setItem(
+          "session-token",
+          transformedUser.accessToken
+        );
+        setUserInfo(transformedUser);
       } else {
         console.log("user not authenticated");
       }

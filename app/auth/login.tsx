@@ -1,12 +1,22 @@
 import Eye from "@/assets/icons/eye.svg";
-import Google from "@/assets/icons/google.svg";
+import GoogleLogo from "@/assets/icons/google.svg";
 import Letter from "@/assets/icons/letter.svg";
 import Lock from "@/assets/icons/lock.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useLogin } from "@/lib/useLogin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithCredential,
+} from "firebase/auth";
+import * as React from "react";
 import { useState } from "react";
 import { Alert, Pressable, TextInput, View } from "react-native";
+import "react-native-gesture-handler";
+import { auth } from "../../firebaseConfig";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -14,6 +24,50 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("michaelwpass");
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
+
+  const [userInfo, setUserInfo] = React.useState();
+  const [loading, setLoading] = React.useState(false);
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    iosClientId: "",
+    androidClientId: "",
+  });
+
+  console.log("userInfo", userInfo);
+
+  const getLocalUser = async () => {
+    try {
+      setLoading(true);
+      const userJSON = await AsyncStorage.getItem("@user");
+      const userData = userJSON ? JSON.parse(userJSON) : null;
+      setUserInfo(userData);
+    } catch (e) {
+      console.log(e, "Error getting local user");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
+    }
+  }, [response]);
+
+  React.useEffect(() => {
+    getLocalUser();
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await AsyncStorage.setItem("@user", JSON.stringify(user));
+        console.log(JSON.stringify(user, null, 2));
+        setUserInfo(user);
+      } else {
+        console.log("user not authenticated");
+      }
+    });
+    return () => unsub();
+  }, []);
 
   const handleLogin = () => {
     loginMutation.mutate(
@@ -81,8 +135,11 @@ export default function LoginScreen() {
         </CustomText>
       </Pressable>
       {/* Google Button */}
-      <Pressable className="bg-white rounded-xl py-4 flex-row items-center justify-center active:opacity-80">
-        <Google width={24} height={24} />
+      <Pressable
+        onPress={() => promptAsync()}
+        className="bg-white rounded-xl py-4 flex-row items-center justify-center active:opacity-80"
+      >
+        <GoogleLogo width={24} height={24} />
         <CustomText className="ml-2 text-[14px] font-lexend-medium text-dark-blue">
           Continue with Google
         </CustomText>

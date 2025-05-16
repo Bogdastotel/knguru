@@ -7,34 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E539E608E6D46CCB664C2C7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2324789343C48CFA5020C0A /* GoogleService-Info.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		443B38E2B1B2FC8E87557E6E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1EC3E5183F67EE57E1609C9C /* PrivacyInfo.xcprivacy */; };
+		507D5ABB044E434CBEB0A4E3 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6634D4A103C443D976E94FE /* noop-file.swift */; };
+		5DE441BB86024CB39EB7701E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 746BCBAC2E344343B889B78B /* GoogleService-Info.plist */; };
 		96905EF65AED1B983A6B3ABC /* libPods-knguru.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-knguru.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		F31B9956ACA4438A98CCE476 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C9F694904841FB8D85FC4A /* noop-file.swift */; };
+		E725D5D98AD2B4EE6E57484B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 64198180DAD9AC0A95157337 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		03C9F694904841FB8D85FC4A /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "knguru/noop-file.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* knguru.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = knguru.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = knguru/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = knguru/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = knguru/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = knguru/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = knguru/main.m; sourceTree = "<group>"; };
-		1EC3E5183F67EE57E1609C9C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = knguru/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-knguru.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-knguru.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64198180DAD9AC0A95157337 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = knguru/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-knguru.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-knguru.debug.xcconfig"; path = "Target Support Files/Pods-knguru/Pods-knguru.debug.xcconfig"; sourceTree = "<group>"; };
+		746BCBAC2E344343B889B78B /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "knguru/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-knguru.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-knguru.release.xcconfig"; path = "Target Support Files/Pods-knguru/Pods-knguru.release.xcconfig"; sourceTree = "<group>"; };
-		9BF5EACDB5E54612B18D1CDE /* knguru-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "knguru-Bridging-Header.h"; path = "knguru/knguru-Bridging-Header.h"; sourceTree = "<group>"; };
+		A6634D4A103C443D976E94FE /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "knguru/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = knguru/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B81EF52CCABE42A094097D1D /* knguru-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "knguru-Bridging-Header.h"; path = "knguru/knguru-Bridging-Header.h"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		E2324789343C48CFA5020C0A /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "knguru/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-knguru/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,10 +61,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				E2324789343C48CFA5020C0A /* GoogleService-Info.plist */,
-				03C9F694904841FB8D85FC4A /* noop-file.swift */,
-				9BF5EACDB5E54612B18D1CDE /* knguru-Bridging-Header.h */,
-				1EC3E5183F67EE57E1609C9C /* PrivacyInfo.xcprivacy */,
+				746BCBAC2E344343B889B78B /* GoogleService-Info.plist */,
+				A6634D4A103C443D976E94FE /* noop-file.swift */,
+				B81EF52CCABE42A094097D1D /* knguru-Bridging-Header.h */,
+				64198180DAD9AC0A95157337 /* PrivacyInfo.xcprivacy */,
 			);
 			name = knguru;
 			sourceTree = "<group>";
@@ -150,13 +150,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "knguru" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				7185C95F1BD2E95E3B12DCA4 /* [Expo] Configure project */,
+				7703F96EC29F16BD7EAF29C0 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				D7C9EFC6EC24C683724F3848 /* [CP] Embed Pods Frameworks */,
+				BA63F4F6219AB8D23D8D8F16 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -206,8 +206,8 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				0E539E608E6D46CCB664C2C7 /* GoogleService-Info.plist in Resources */,
-				443B38E2B1B2FC8E87557E6E /* PrivacyInfo.xcprivacy in Resources */,
+				5DE441BB86024CB39EB7701E /* GoogleService-Info.plist in Resources */,
+				E725D5D98AD2B4EE6E57484B /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +251,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7185C95F1BD2E95E3B12DCA4 /* [Expo] Configure project */ = {
+		7703F96EC29F16BD7EAF29C0 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -324,7 +324,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-knguru/Pods-knguru-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D7C9EFC6EC24C683724F3848 /* [CP] Embed Pods Frameworks */ = {
+		BA63F4F6219AB8D23D8D8F16 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -352,7 +352,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				F31B9956ACA4438A98CCE476 /* noop-file.swift in Sources */,
+				507D5ABB044E434CBEB0A4E3 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,12 +5,14 @@ import Lock from "@/assets/icons/lock.svg";
 import { CustomText } from "@/components/ui/CustomText";
 import { useLogin } from "@/lib/useLogin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithCredential,
+  User,
 } from "firebase/auth";
 import * as React from "react";
 import { useState } from "react";
@@ -24,12 +26,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("michaelwpass");
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
+  const [isLoading, setIsLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
 
-  const [userInfo, setUserInfo] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    iosClientId: "",
-    androidClientId: "",
+    iosClientId:
+      "620102760932-905tivopfp46bgjobn3prl5kifgv55qf.apps.googleusercontent.com",
+    androidClientId:
+      "620102760932-9jmqfliqbs5bjli6d6272j9crt6bdsg0.apps.googleusercontent.com",
   });
 
   console.log("userInfo", userInfo);
@@ -81,6 +86,35 @@ export default function LoginScreen() {
         },
       }
     );
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const { accessToken } = await GoogleSignin.getTokens();
+
+      // Store the access token
+      await AsyncStorage.setItem("session-token", accessToken);
+
+      // Create a Google credential with the token
+      const credential = GoogleAuthProvider.credential(accessToken);
+
+      // Sign in to Firebase
+      const userCredential = await signInWithCredential(auth, credential);
+      setUserInfo(userCredential.user);
+
+      // Store the user data
+      await AsyncStorage.setItem("user", JSON.stringify(userCredential.user));
+
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -136,12 +170,13 @@ export default function LoginScreen() {
       </Pressable>
       {/* Google Button */}
       <Pressable
-        onPress={() => promptAsync()}
+        onPress={handleGoogleSignIn}
+        disabled={isLoading}
         className="bg-white rounded-xl py-4 flex-row items-center justify-center active:opacity-80"
       >
         <GoogleLogo width={24} height={24} />
         <CustomText className="ml-2 text-[14px] font-lexend-medium text-dark-blue">
-          Continue with Google
+          {isLoading ? "Signing in..." : "Continue with Google"}
         </CustomText>
       </Pressable>
     </View>

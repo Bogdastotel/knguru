@@ -49,6 +49,19 @@ export default function HomeScreen() {
   const creditsAnim = useRef(new Animated.Value(0)).current;
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const headerTranslateY = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, -200],
+    extrapolate: "clamp",
+  });
+
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 50],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
   useEffect(() => {
     if (showNotifModal) {
@@ -147,29 +160,47 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <View className="flex-row justify-between align-center items-center pl-4 mb-7 mt-20">
-        <Pressable
-          className="flex-row items-center bg-white rounded-full px-1 py-1"
-          onPress={() => setShowCreditsModal(true)}
-        >
-          <Credits />
-          <CustomText className="text-xs text-dark-blue font-lexend ml-2.5 mr-3">
-            512 credits
-          </CustomText>
-        </Pressable>
-        <Pressable
-          className="mr-6 justify-center"
-          onPress={() => setShowNotifModal(true)}
-        >
-          <Bell />
-        </Pressable>
-      </View>
-      <SearchInput value={search} onChangeText={setSearch} />
-      <FlatList
+      <Animated.View
+        style={{
+          transform: [{ translateY: headerTranslateY }],
+          opacity: headerOpacity,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          backgroundColor: "transparent",
+        }}
+      >
+        <View className="flex-row justify-between align-center items-center pl-4 mb-7 mt-20">
+          <Pressable
+            className="flex-row items-center bg-white rounded-full px-1 py-1"
+            onPress={() => setShowCreditsModal(true)}
+          >
+            <Credits />
+            <CustomText className="text-xs text-dark-blue font-lexend ml-2.5 mr-3">
+              512 credits
+            </CustomText>
+          </Pressable>
+          <Pressable
+            className="mr-6 justify-center"
+            onPress={() => setShowNotifModal(true)}
+          >
+            <Bell />
+          </Pressable>
+        </View>
+        <SearchInput value={search} onChangeText={setSearch} />
+      </Animated.View>
+      <Animated.FlatList
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 140 }}
+        contentContainerStyle={{ paddingBottom: 140, paddingTop: 240 }}
         data={[1, 2]}
         keyExtractor={(_, i) => i.toString()}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
         ListHeaderComponent={() => (
           <View>
             <View className="flex-row justify-between items-center pl-4 mb-4">

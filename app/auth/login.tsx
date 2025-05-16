@@ -98,11 +98,6 @@ export default function LoginScreen() {
           transformedUser.accessToken
         );
         setUserInfo(transformedUser);
-
-        // Show user info in alert
-        Alert.alert("User Info", JSON.stringify(transformedUser, null, 2), [
-          { text: "OK" },
-        ]);
       } else {
         console.log("user not authenticated");
       }

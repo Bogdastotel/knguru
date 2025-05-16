@@ -8,7 +8,6 @@
     "scheme": "knguru",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bogdastotel.knguru",
@@ -17,7 +16,8 @@
         "dark": "./assets/images/ios-dark.png",
         "light": "./assets/images/ios-light.png",
         "tinted": "./assets/images/ios-tinted.png"
-      }
+      },
+      "appleTeamId": "X47Q4F2D2T"
     },
     "android": {
       "adaptiveIcon": {
@@ -44,7 +44,7 @@
       "expo-router",
       [
         "expo-splash-screen",
-        { 
+        {
           "image": "./assets/images/splash-icon-dark.png",
           "imageWidth": 200,
           "resizeMode": "contain",
@@ -57,7 +57,7 @@
           }
         }
       ],
-    "expo-font"
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

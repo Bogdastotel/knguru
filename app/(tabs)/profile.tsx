@@ -2,7 +2,7 @@ import { CustomText } from "@/components/ui/CustomText";
 import { useAuthStore } from "@/lib/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image, Pressable, View } from "react-native";
 
 export default function ProfileScreen() {
@@ -10,6 +10,7 @@ export default function ProfileScreen() {
   const login = useAuthStore((s) => s.login);
   const logout = useAuthStore((s) => s.logout);
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -18,7 +19,10 @@ export default function ProfileScreen() {
           const userObj = JSON.parse(userStr);
           login(userObj, userObj.accessToken);
         }
+        setLoading(false);
       });
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -35,6 +39,16 @@ export default function ProfileScreen() {
       { text: "Logout", style: "destructive", onPress: handleLogout },
     ]);
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <CustomText className="text-lg text-dark-blue mb-6">
+          Loading...
+        </CustomText>
+      </View>
+    );
+  }
 
   if (!user) {
     return (

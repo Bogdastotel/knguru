@@ -12,6 +12,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bogdastotel.knguru",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "icon": {
         "dark": "./assets/images/ios-dark.png",
         "light": "./assets/images/ios-light.png",
@@ -26,7 +27,8 @@
       },
       "icon": "./assets/images/icon.png",
       "edgeToEdgeEnabled": true,
-      "package": "com.bogdastotel.knguru"
+      "package": "com.bogdastotel.knguru",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -55,7 +57,8 @@
           }
         }
       ],
-      "expo-font"
+    ["@react-native-google-signin/google-signin"],
+    "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
